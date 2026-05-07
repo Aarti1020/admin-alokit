@@ -290,6 +290,28 @@ const buildBody = (resource: ResourceKey, form: FormValues, current: ContentItem
 
 type InsightAction = "all" | "live" | "review" | "editor";
 
+const pageShellClass = "space-y-5 sm:space-y-6 lg:space-y-8";
+const panelClass = "rounded-2xl border border-slate-200 bg-white p-4 shadow-sm shadow-slate-200/60 sm:p-5 lg:p-6";
+const sectionHeadingClass = "flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between";
+const sectionTitleClass = "text-lg font-semibold text-slate-950 sm:text-xl";
+const sectionDescriptionClass = "mt-1 text-sm leading-6 text-slate-500";
+const rowActionsClass = "flex flex-col gap-2 sm:flex-row sm:items-center";
+const wrapActionsClass = "flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center";
+const ghostButtonClass = "inline-flex min-h-10 items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-slate-300 hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-slate-900/10 disabled:cursor-not-allowed disabled:opacity-60";
+const dangerButtonClass = "border-red-200 text-red-600 hover:border-red-300 hover:bg-red-50 focus:ring-red-500/20";
+const primaryButtonClass = "inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-slate-950 px-5 py-2.5 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-900/20 disabled:cursor-not-allowed disabled:opacity-60";
+const fieldClass = "grid gap-2 text-sm font-medium text-slate-700";
+const inputClass = "min-h-11 w-full rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 shadow-sm outline-none transition placeholder:text-slate-400 focus:border-slate-400 focus:ring-4 focus:ring-slate-100";
+const textareaClass = "min-h-32 w-full resize-y rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-900 shadow-sm outline-none transition placeholder:text-slate-400 focus:border-slate-400 focus:ring-4 focus:ring-slate-100";
+const helperTextClass = "text-xs font-normal leading-5 text-slate-500";
+const miniTextClass = "text-xs leading-5 text-slate-500 sm:text-sm";
+const pillClass = "inline-flex w-fit items-center rounded-full border border-slate-200 bg-slate-50 px-3 py-1 text-xs font-semibold text-slate-600";
+const softPillClass = "border-emerald-200 bg-emerald-50 text-emerald-700";
+const mutedPillClass = "border-slate-200 bg-slate-100 text-slate-500";
+const warningPillClass = "w-full rounded-xl border-amber-200 bg-amber-50 px-3 py-2 text-sm leading-6 text-amber-800";
+const cardActionClass = "inline-flex items-center gap-1 text-xs font-semibold text-slate-500 transition group-hover:text-slate-950";
+const listCardClass = "rounded-2xl border border-slate-200 bg-white p-4 shadow-sm transition hover:border-slate-300 hover:shadow-md";
+
 export default function ContentPage() {
   const listRef = useRef<HTMLElement | null>(null);
   const editorRef = useRef<HTMLElement | null>(null);
@@ -487,8 +509,8 @@ export default function ContentPage() {
   };
 
   return (
-    <div className="stack-lg">
-      <section className="stats-grid">
+    <div className={pageShellClass}>
+      <section className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
         {insights.map((item) => {
           const Icon = item.icon;
           const isActive =
@@ -501,51 +523,49 @@ export default function ContentPage() {
               key={item.label}
               type="button"
               className={classNames(
-                "panel",
-                "stat-card",
-                "metric-card",
-                "content-insight-card",
-                isActive && "content-insight-card-active"
+                panelClass,
+                "group text-left transition hover:-translate-y-0.5 hover:border-slate-300 hover:shadow-md focus:outline-none focus:ring-2 focus:ring-slate-900/10",
+                isActive && "border-slate-900 bg-slate-950 text-white hover:border-slate-900"
               )}
               onClick={() => void handleInsightAction(item.action)}
             >
-              <div className="metric-card-head">
-                <div className="metric-icon" aria-hidden="true">
+              <div className="flex items-start gap-3 text-sm font-semibold">
+                <div className={classNames("flex size-10 shrink-0 items-center justify-center rounded-xl border border-slate-200 bg-slate-50 text-slate-700", isActive && "border-white/20 bg-white/10 text-white")} aria-hidden="true">
                   <Icon size={18} />
                 </div>
                 <span>{item.label}</span>
-                <span className="content-card-action">
+                <span className={classNames(cardActionClass, isActive && "text-white/70 group-hover:text-white")}>
                   Open
                   <ArrowRight size={16} />
                 </span>
               </div>
-              <strong>{item.value}</strong>
-              <p className="mini-text">{item.detail}</p>
+              <strong className="mt-4 block text-2xl font-bold tracking-tight sm:text-3xl">{item.value}</strong>
+              <p className={classNames(miniTextClass, isActive && "text-white/70")}>{item.detail}</p>
             </button>
           );
         })}
       </section>
 
-      <div className="two-column-grid content-studio-grid">
-        <section ref={listRef} className="panel stack-md">
-          <div className="section-heading">
+      <div className="grid gap-5 xl:grid-cols-[minmax(0,1.05fr)_minmax(360px,0.95fr)]">
+        <section ref={listRef} className={classNames(panelClass, "space-y-5")}>
+          <div className={sectionHeadingClass}>
             <div>
-              <h3>Content Studio</h3>
-              <p>{descriptions[resource]}</p>
+              <h3 className={sectionTitleClass}>Content Studio</h3>
+              <p className={sectionDescriptionClass}>{descriptions[resource]}</p>
             </div>
-            <div className="row-actions">
-              <button className="ghost-button" type="button" onClick={() => resetForm()}>
+            <div className={rowActionsClass}>
+              <button className={ghostButtonClass} type="button" onClick={() => resetForm()}>
                 New item
               </button>
-              <button className="ghost-button" type="button" onClick={() => loadItems()}>
+              <button className={ghostButtonClass} type="button" onClick={() => loadItems()}>
                 Refresh list
               </button>
             </div>
           </div>
 
-          <label className="field">
+          <label className={fieldClass}>
             <span>Resource</span>
-            <select value={resource} onChange={(e) => onResourceChange(e.target.value as ResourceKey)}>
+            <select className={inputClass} value={resource} onChange={(e) => onResourceChange(e.target.value as ResourceKey)}>
               {Object.entries(labels).map(([value, label]) => (
                 <option key={value} value={value}>
                   {label}
@@ -554,30 +574,31 @@ export default function ContentPage() {
             </select>
           </label>
 
-          <div className="product-command-bar">
-            <label className="search-input">
+          <div className="grid gap-3 md:grid-cols-[minmax(0,1fr)_auto] md:items-center">
+            <label className="flex min-h-11 items-center gap-2 rounded-xl border border-slate-200 bg-white px-3 text-slate-500 shadow-sm transition focus-within:border-slate-400 focus-within:ring-4 focus-within:ring-slate-100">
               <Search size={18} />
               <input
+                className="min-h-10 w-full bg-transparent text-sm text-slate-900 outline-none placeholder:text-slate-400"
                 placeholder={`Search ${labels[resource].toLowerCase()} by title, slug, or content`}
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
               />
             </label>
-            <button className="ghost-button" type="button" onClick={openEditor}>
+            <button className={ghostButtonClass} type="button" onClick={openEditor}>
               Open editor
             </button>
           </div>
 
-          <div className="product-command-meta">
-            <div className="pill">{filteredItems.length} items visible</div>
-            <div className="pill">{selectedId ? "Editing current item" : "Ready to create"}</div>
+          <div className="flex flex-wrap gap-2">
+            <div className={pillClass}>{filteredItems.length} items visible</div>
+            <div className={pillClass}>{selectedId ? "Editing current item" : "Ready to create"}</div>
           </div>
 
-          <div className="stack-sm">
+          <div className="space-y-3">
             {loading ? (
-              <div className="empty-state">Loading content items...</div>
+              <div className="rounded-2xl border border-dashed border-slate-300 bg-slate-50 px-4 py-10 text-center text-sm font-medium text-slate-500">Loading content items...</div>
             ) : filteredItems.length === 0 ? (
-              <div className="empty-state">No items match the current search.</div>
+              <div className="rounded-2xl border border-dashed border-slate-300 bg-slate-50 px-4 py-10 text-center text-sm font-medium text-slate-500">No items match the current search.</div>
             ) : (
               filteredItems.map((item) => {
                 const id = getId(item);
@@ -588,48 +609,47 @@ export default function ContentPage() {
                   <article
                     key={id}
                     className={classNames(
-                      "list-card",
-                      "vertical",
-                      "content-item-card",
-                      isSelected && "content-item-card-selected"
+                      listCardClass,
+                      "space-y-3",
+                      isSelected && "border-slate-900 ring-2 ring-slate-900/10"
                     )}
                   >
                     <div
                       role="button"
                       tabIndex={0}
-                      className="content-item-selectable"
+                      className="grid cursor-pointer gap-3 rounded-xl outline-none focus:ring-2 focus:ring-slate-900/10"
                       onClick={() => void onEdit(id)}
                       onKeyDown={(event) => handleCardKeyDown(event, id)}
                       aria-label={`Open ${getLabel(item)} in editor`}
                       aria-pressed={isSelected}
                     >
-                      <div className="review-head">
+                      <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
                         <div>
-                          <strong>{getLabel(item)}</strong>
-                          <div className="mini-text">{id}</div>
+                          <strong className="text-sm font-semibold text-slate-950 sm:text-base">{getLabel(item)}</strong>
+                          <div className={miniTextClass}>{id}</div>
                         </div>
-                        {meta[0] ? <span className="pill pill-soft">{meta[0]}</span> : null}
+                        {meta[0] ? <span className={classNames(pillClass, softPillClass)}>{meta[0]}</span> : null}
                       </div>
-                      {meta.length > 1 ? <div className="mini-text">{meta.slice(1).join(" . ")}</div> : null}
-                      <p className="mini-text">{preview(item)}</p>
-                      <div className="content-card-footer">
-                        <span className="content-card-hint">
+                      {meta.length > 1 ? <div className={miniTextClass}>{meta.slice(1).join(" . ")}</div> : null}
+                      <p className={miniTextClass}>{preview(item)}</p>
+                      <div className="flex flex-col gap-2 border-t border-slate-100 pt-3 sm:flex-row sm:items-center sm:justify-between">
+                        <span className="text-xs font-medium text-slate-500">
                           {isSelected ? "Currently open in editor" : "Open in editor"}
                         </span>
-                        <span className="content-card-action">
+                        <span className={cardActionClass}>
                           Edit
                           <ArrowRight size={16} />
                         </span>
                       </div>
                     </div>
-                    <div className="row-actions row-actions-wrap">
-                      <button type="button" className="ghost-button" onClick={() => void onEdit(id)}>
+                    <div className={wrapActionsClass}>
+                      <button type="button" className={ghostButtonClass} onClick={() => void onEdit(id)}>
                         Edit
                       </button>
                       {"delete" in api ? (
                         <button
                           type="button"
-                          className="ghost-button danger"
+                          className={classNames(ghostButtonClass, dangerButtonClass)}
                           onClick={() => void onDelete(id)}
                           disabled={deletingId === id}
                         >
@@ -644,38 +664,38 @@ export default function ContentPage() {
           </div>
         </section>
 
-        <section ref={editorRef} className="panel stack-md">
-          <div className="section-heading">
+        <section ref={editorRef} className={classNames(panelClass, "space-y-5")}>
+          <div className={sectionHeadingClass}>
             <div>
-              <h3>{selectedId ? "Edit item" : "Create item"}</h3>
-              <p>Structured admin fields only. No raw JSON needed.</p>
+              <h3 className={sectionTitleClass}>{selectedId ? "Edit item" : "Create item"}</h3>
+              <p className={sectionDescriptionClass}>Structured admin fields only. No raw JSON needed.</p>
             </div>
-            <button className="ghost-button" type="button" onClick={() => resetForm()}>
+            <button className={ghostButtonClass} type="button" onClick={() => resetForm()}>
               Reset form
             </button>
           </div>
 
-          <div className={classNames("editor-banner", selectedId && "editor-banner-active")}>
-            <div className="editor-banner-icon">
+          <div className={classNames("flex gap-3 rounded-2xl border border-slate-200 bg-slate-50 p-4", selectedId && "border-emerald-200 bg-emerald-50")}>
+            <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-white text-slate-700 shadow-sm">
               <WandSparkles size={18} />
             </div>
             <div>
-              <div className="product-editor-mode-row">
+              <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
                 <strong>{selectedId ? "Editing existing content" : "Creating new content"}</strong>
-                <span className={classNames("pill", selectedId ? "pill-soft" : "status-pill-muted")}>
+                <span className={classNames(pillClass, selectedId ? softPillClass : mutedPillClass)}>
                   {selectedId ? "Edit mode" : "Create mode"}
                 </span>
               </div>
-              <div className="mini-text">
+              <div className={miniTextClass}>
                 Slugs are generated automatically from the title if you leave them blank.
               </div>
             </div>
           </div>
 
-          {notes[resource] ? <div className="pill warning">{notes[resource]}</div> : null}
+          {notes[resource] ? <div className={classNames(pillClass, warningPillClass)}>{notes[resource]}</div> : null}
 
           <form
-            className="stack-md"
+            className="space-y-5"
             onSubmit={(event) => {
               event.preventDefault();
               void onSave();
@@ -683,21 +703,23 @@ export default function ContentPage() {
           >
             {fields[resource].map((field) =>
               field.type === "checkbox" ? (
-                <label key={field.key} className="toggle-card">
+                <label key={field.key} className="flex items-start gap-3 rounded-2xl border border-slate-200 bg-white p-4 shadow-sm transition hover:border-slate-300">
                   <input
+                    className="mt-1 size-4 rounded border-slate-300 text-slate-950 focus:ring-slate-900/20"
                     type="checkbox"
                     checked={Boolean(form[field.key])}
                     onChange={(e) => setForm((current) => ({ ...current, [field.key]: e.target.checked }))}
                   />
                   <div>
-                    <strong>{field.label}</strong>
-                    <span>{field.helper || "Enable or disable this option."}</span>
+                    <strong className="block text-sm font-semibold text-slate-950">{field.label}</strong>
+                    <span className={helperTextClass}>{field.helper || "Enable or disable this option."}</span>
                   </div>
                 </label>
               ) : field.type === "select" ? (
-                <label key={field.key} className="field">
+                <label key={field.key} className={fieldClass}>
                   <span>{field.label}</span>
                   <select
+                    className={inputClass}
                     value={String(form[field.key] || "")}
                     onChange={(e) => setForm((current) => ({ ...current, [field.key]: e.target.value }))}
                   >
@@ -707,35 +729,37 @@ export default function ContentPage() {
                       </option>
                     ))}
                   </select>
-                  {field.helper ? <small>{field.helper}</small> : null}
+                  {field.helper ? <small className={helperTextClass}>{field.helper}</small> : null}
                 </label>
               ) : field.type === "textarea" ? (
-                <label key={field.key} className="field">
+                <label key={field.key} className={fieldClass}>
                   <span>{field.label}</span>
                   <textarea
+                    className={textareaClass}
                     value={String(form[field.key] || "")}
                     onChange={(e) => setForm((current) => ({ ...current, [field.key]: e.target.value }))}
                   />
-                  {field.helper ? <small>{field.helper}</small> : null}
+                  {field.helper ? <small className={helperTextClass}>{field.helper}</small> : null}
                 </label>
               ) : (
-                <label key={field.key} className="field">
+                <label key={field.key} className={fieldClass}>
                   <span>{field.label}</span>
                   <input
+                    className={inputClass}
                     type={field.type === "number" ? "number" : "text"}
                     value={String(form[field.key] || "")}
                     onChange={(e) => setForm((current) => ({ ...current, [field.key]: e.target.value }))}
                   />
-                  {field.helper ? <small>{field.helper}</small> : null}
+                  {field.helper ? <small className={helperTextClass}>{field.helper}</small> : null}
                 </label>
               )
             )}
 
-            <div className="row-actions row-actions-wrap">
-              <button className="primary-button" type="submit" disabled={saving}>
+            <div className={wrapActionsClass}>
+              <button className={primaryButtonClass} type="submit" disabled={saving}>
                 {saving ? "Saving..." : selectedId ? "Update item" : "Create item"}
               </button>
-              <button className="ghost-button" type="button" onClick={() => resetForm()}>
+              <button className={ghostButtonClass} type="button" onClick={() => resetForm()}>
                 Reset form
               </button>
             </div>
